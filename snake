@@ -1,0 +1,86 @@
+from typing import Set
+import pygame
+from pygame import event
+from pygame.constants import KEYDOWN, K_SPACE, MOUSEBUTTONDOWN, K_w
+from pygame.event import Event
+import random
+
+from pygame.font import Font
+
+
+pygame.init()
+
+
+
+
+#variable
+W, H =700, 500
+
+cool_yellow = (255, 211, 0)
+
+pygame.display.set_caption("SNAKE :@")
+snake_rect = pygame.Surface((25,25))
+snake_rect.fill("White")
+
+screen=pygame.display.set_mode((W, H))
+font = pygame.font.Font("SUBWT___.ttf", 50)
+size_down = pygame.font.Font("SUBWT___.ttf", 30)
+#object1
+fruit_rect = pygame.Surface((30, 30), pygame.SRCALPHA)
+pygame.draw.circle(fruit_rect, (225,0,135), (15, 15), 13)
+fps=30
+snake_length = []
+
+
+
+def snake_movment(snake, lastKey):
+    if lastKey == pygame.K_w:# augsa
+        snake.y -= 5
+    if lastKey == pygame.K_s:# leja
+        snake.y += 5
+    if lastKey == pygame.K_a:# kreisa
+        snake.x -= 5
+    if lastKey == pygame.K_d:# laba
+        snake.x += 5
+
+    
+# random spawn location for the fruit if it collides with snake
+def colide_fruit(snake, fruit):
+    if snake.colliderect(fruit):
+        x = random.randint(1, 600)
+        y = random.randint(1, 400)
+        fruit.x = x
+        fruit.y = y
+
+
+
+
+def game_display(snake, fruit):
+    screen.fill(cool_yellow)
+    screen.blit(snake_rect, (snake.x, snake.y)) 
+    screen.blit(fruit_rect, (fruit.x, fruit.y))
+    pygame.display.update()
+    
+  
+def main():
+    lastKey = None
+    snake = snake_rect.get_rect(center = (250, 250))
+    fruit = snake_rect.get_rect(topleft = (450, 100))
+    clock=pygame.time.Clock()
+    run = True
+    while run:
+
+        clock.tick(fps)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            if event.type == pygame.KEYDOWN: 
+                lastKey = event.key
+
+        
+        snake_movment(snake, lastKey)
+        colide_fruit(snake, fruit)
+        game_display(snake, fruit)
+    pygame.quit()
+if __name__=='__main__':
+    main()
